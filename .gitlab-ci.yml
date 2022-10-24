@@ -52,8 +52,9 @@ package:
   needs:
     - job: aws
       artifacts: true
-  image: ghcr.io/softinstigate/graalvm-maven-docker
+  image: maven:3-eclipse-temurin-17-alpine
   stage: package
   script:
-    - mvn package $MAVEN_CLI_OPTS -Pnative -Dquarkus.container-image.registry=$AWS_ECR -Dquarkus.container-image.push=true -Dquarkus.container-image.username=AWS -Dquarkus.container-image.password=$(cat password.txt)
+    - ls -ltr
+    - mvn package $MAVEN_CLI_OPTS -Pnative -Dquarkus.native.container-build=true -Dquarkus.container-image.registry=$AWS_ECR -Dquarkus.container-image.push=true -Dquarkus.container-image.username=AWS -Dquarkus.container-image.password=$(cat password.txt)
 
