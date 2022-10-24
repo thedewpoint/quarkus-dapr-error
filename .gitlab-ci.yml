@@ -58,5 +58,6 @@ package:
   stage: package
   script:
     - ls -ltr
+    - source /root/.bashrc && mvn "$@"
     - mvn package $MAVEN_CLI_OPTS -Pnative -Dquarkus.native.container-build=true -Dquarkus.container-image.registry=$AWS_ECR -Dquarkus.container-image.push=true -Dquarkus.container-image.username=AWS -Dquarkus.container-image.password=$(cat password.txt)
 
