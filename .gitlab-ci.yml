@@ -52,13 +52,8 @@ package:
   needs:
     - job: aws
       artifacts: true
-  image: maven:3-eclipse-temurin-17-alpine
+  image: ghcr.io/softinstigate/graalvm-maven-docker
   stage: package
   script:
-    - echo "Downloading GraalVM"
-    - wget -q https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-19.3.1/graalvm-ce-java8-linux-amd64-19.3.1.tar.gz
-    - tar zxf graalvm-ce-java8-linux-amd64-19.3.1.tar.gz
-    - echo "Installing GraalVM via gu"
-    - ${CI_PROJECT_DIR}/graalvm-ce-java8-19.3.1/bin/gu install native-image
     - mvn package $MAVEN_CLI_OPTS -Pnative -Dquarkus.container-image.registry=$AWS_ECR -Dquarkus.container-image.push=true -Dquarkus.container-image.username=AWS -Dquarkus.container-image.password=$(cat password.txt)
 
