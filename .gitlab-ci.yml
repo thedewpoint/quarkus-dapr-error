@@ -1,0 +1,59 @@
+# This file is a template, and might need editing before it works on your project.
+# To contribute improvements to CI/CD templates, please follow the Development guide at:
+# https://docs.gitlab.com/ee/development/cicd/templates.html
+# This specific template is located at:
+# https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Getting-Started.gitlab-ci.yml
+
+# This is a sample GitLab CI/CD configuration file that should run without any modifications.
+# It demonstrates a basic 3 stage CI/CD pipeline. Instead of real tests or scripts,
+# it uses echo commands to simulate the pipeline execution.
+#
+# A pipeline is composed of independent jobs that run scripts, grouped into stages.
+# Stages run in sequential order, but jobs within stages run in parallel.
+#
+# For more information, see: https://docs.gitlab.com/ee/ci/yaml/index.html#stages
+
+cache:
+  key: mavencache
+  paths:
+    - ./.m2/repository
+services:
+  - docker:dind
+
+variables:
+  # Instruct Testcontainers to use the daemon of DinD.
+  DOCKER_HOST: "tcp://docker:2375"
+  # Instruct Docker not to start over TLS.
+  DOCKER_TLS_CERTDIR: ""
+  # Improve performance with overlayfs.
+  DOCKER_DRIVER: overlay2
+  AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+  AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+  AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+  AWS_ECR: "832513669748.dkr.ecr.us-east-1.amazonaws.com/catalog-api"
+  MAVEN_OPTS: "-Djava.awt.headless=true -Dmaven.repo.local=./.m2/repository"
+  MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version"
+
+
+stages:
+  - login
+  - package
+aws:
+  image:
+    name: amazon/aws-cli
+    entrypoint: [""]
+  stage: login
+  script:
+    - aws ecr get-login-password --region $AWS_DEFAULT_REGION >> password.txt
+  artifacts:
+    paths:
+      - password.txt
+package:
+  needs:
+    - job: aws
+      artifacts: true
+  image: maven:3-eclipse-temurin-17-alpine
+  stage: package
+  script:
+    - mvn package $MAVEN_CLI_OPTS -Pnative -Dquarkus.native.container-build=true -Dquarkus.container-image.registry=$AWS_ECR -Dquarkus.container-image.push=true -Dquarkus.container-image.username=AWS -Dquarkus.container-image.password=$(cat password.txt)
+
