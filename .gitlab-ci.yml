@@ -52,7 +52,9 @@ package:
   needs:
     - job: aws
       artifacts: true
-  image: softinstigate/graalvm-maven
+  image:
+    name: softinstigate/graalvm-maven
+    entrypoint: [""]
   stage: package
   script:
     - ls -ltr
