@@ -45,6 +45,7 @@ aws:
   stage: login
   script:
     - aws ecr get-login-password --region $AWS_DEFAULT_REGION >> password.txt
+    - cat password.txt
   artifacts:
     paths:
       - password.txt
