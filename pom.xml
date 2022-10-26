@@ -35,7 +35,7 @@
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-resteasy-reactive-jackson</artifactId>
+      <artifactId>quarkus-resteasy-jackson</artifactId>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
@@ -43,16 +43,16 @@
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-resteasy-reactive</artifactId>
+      <artifactId>quarkus-resteasy</artifactId>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-container-image-jib</artifactId>
     </dependency>
     <dependency>
-      <groupId>io.dapr</groupId>
-      <artifactId>dapr-sdk</artifactId>
-      <version>1.6.0</version>
+      <groupId>io.quarkiverse.dapr</groupId>
+      <artifactId>quarkus-dapr</artifactId>
+      <version>1.0.2</version>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
