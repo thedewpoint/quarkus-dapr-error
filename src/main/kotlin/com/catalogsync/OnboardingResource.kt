@@ -9,14 +9,14 @@ import javax.ws.rs.Path
 import javax.ws.rs.Produces
 import javax.ws.rs.core.MediaType
 
-@Path("/hello")
-class GreetingResource constructor(){
+@Path("/onboarding")
+class OnboardingResource constructor(@Inject val eventBus: EventBusPort){
     val TOPIC_NAME = "shop.triggers"
     @GET
     @Produces(MediaType.TEXT_PLAIN)
-    fun hello() = "Hello from RESTEasy Reactive"
+    fun health() = "healthy"
 
-//    @POST
-//    @Produces(MediaType.TEXT_PLAIN)
-//    fun publish(onboardingEvent: OnboardingEvent) = eventBus.sendMessage(onboardingEvent,TOPIC_NAME )
+    @POST
+    @Produces(MediaType.TEXT_PLAIN)
+    fun publish(onboardingEvent: OnboardingEvent) = eventBus.sendMessage(onboardingEvent,TOPIC_NAME )
 }
