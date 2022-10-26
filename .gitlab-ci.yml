@@ -30,7 +30,7 @@ variables:
   AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
   AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
   AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
-  AWS_ECR: "832513669748.dkr.ecr.us-east-1.amazonaws.com/catalog-api/"
+  AWS_ECR: "832513669748.dkr.ecr.us-east-1.amazonaws.com/catalog-api"
   MAVEN_OPTS: "-Djava.awt.headless=true -Dmaven.repo.local=./.m2/repository"
   MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version"
 
@@ -45,7 +45,6 @@ aws:
   stage: login
   script:
     - aws ecr get-login-password --region $AWS_DEFAULT_REGION >> password.txt
-    - cat password.txt
   artifacts:
     paths:
       - password.txt
@@ -61,5 +60,5 @@ package:
     - ls -ltr
     - source /root/.bashrc
     - mvn install $MAVEN_CLI_OPTS -DskipTests
-    - mvn package $MAVEN_CLI_OPTS -Pnative -DskipTests -Dquarkus.container-image.registry=$AWS_ECR -Dquarkus.container-image.push=true -Dquarkus.container-image.username=AWS -Dquarkus.container-image.password=$(cat password.txt)
+    - mvn package $MAVEN_CLI_OPTS -Pnative -DskipTests -Dquarkus.container-image.image=$AWS_ECR:latest -Dquarkus.container-image.push=true -Dquarkus.container-image.username=AWS -Dquarkus.container-image.password=$(cat password.txt)
 
